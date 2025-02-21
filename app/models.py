@@ -5,6 +5,9 @@ class Manufacturer(models.Model):
     title = models.CharField(null=True, max_length=64, verbose_name="Brend nomi")
     region = models.CharField(null=True, max_length=64, verbose_name="Hudud")
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         verbose_name = "Ishlab chiqaruvchi"
         verbose_name_plural = "Ishlab chiqaruvchilar"
@@ -29,9 +32,13 @@ class Product(models.Model):
         return self.title
 
 
-class Income(models.Model):
+class IncomeItem(models.Model):
     product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT, verbose_name="Mahsulot")
     quantity = models.IntegerField(default=0, verbose_name="Miqdori")
+    income = models.ForeignKey('app.Income', null=True, on_delete=models.CASCADE, verbose_name="Kirim")
+
+
+class Income(models.Model):
     datetime = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Vaqt")
 
     class Meta:

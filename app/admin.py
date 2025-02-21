@@ -16,11 +16,16 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('title',)
 
 
+class IncomeItemAdmin(admin.TabularInline):
+    model = IncomeItem
+    extra = 100
+
+
 @admin.register(Income)
 class IncomeAdmin(admin.ModelAdmin):
-    list_display = ('product', 'quantity', 'datetime')
+    list_display = ('datetime',)
     list_filter = ('datetime',)
-    search_fields = ('product__title',)
+    inlines = [IncomeItemAdmin]
 
 
 @admin.register(ProductBalance)
