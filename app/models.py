@@ -88,6 +88,7 @@ class SaleItem(models.Model):
 class Sale(models.Model):
     store = models.ForeignKey(Store, null=True, on_delete=models.PROTECT, verbose_name="Do'kon")
     client = models.ForeignKey(Client, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Mijoz")
+    price = models.BigIntegerField(default=0, verbose_name="Narxi")
     datetime = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Vaqt")
 
     class Meta:
