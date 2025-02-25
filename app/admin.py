@@ -7,6 +7,7 @@ from django import forms
 from django.http import JsonResponse
 from django.db.models import Sum, F, ExpressionWrapper, BigIntegerField
 from app.forms import SaleItemForm
+from django.utils.html import format_html
 
 
 @admin.register(Manufacturer)
@@ -63,13 +64,19 @@ class SaleItemInline(admin.TabularInline):
     form = SaleItemForm
 
 
+class ReturnItemInline(admin.TabularInline):
+    model = ReturnItem
+    extra = 100
+
+
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ('store', 'client', 'price', 'datetime', 'remaining_debt')
+    list_display = ('store', 'client', 'price', 'datetime', 'remaining_debt', 'edit_button')
     list_filter = ('store', 'datetime')
     sortable_by = ('store', 'client', 'price', 'datetime', 'remaining_debt')
     search_fields = ('client__name', 'store__title')
-    inlines = [SaleItemInline, PaymentInline]
+    inlines = [SaleItemInline, PaymentInline, ReturnItemInline]
+    list_display_links = None
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -86,6 +93,14 @@ class SaleAdmin(admin.ModelAdmin):
         return obj.remaining_debt
     remaining_debt.short_description = 'Qolgan qarz'
     remaining_debt.admin_order_field = 'remaining_debt'
+
+    def edit_button(self, obj):
+        return format_html(
+            '<a class="btn btn-primary" href="{}"><i class="fas fa-edit"></i></a>',
+            f'/admin/app/sale/{obj.id}/change/'
+        )
+    edit_button.short_description = ''
+    edit_button.allow_tags = True
 
 
 @admin.register(Archive)

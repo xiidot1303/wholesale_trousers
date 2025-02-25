@@ -1,7 +1,7 @@
 from django.dispatch import Signal
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Income, ProductBalance, SaleItem
+from app.models import *
 
 # Define a custom signal
 my_custom_signal = Signal()
@@ -29,4 +29,13 @@ def update_product_balance_on_sale(sender, instance, created, **kwargs):
     if created:
         product_balance, _ = ProductBalance.objects.get_or_create(product=instance.product)
         product_balance.quantity -= instance.quantity
+        product_balance.save()
+
+
+# Signal receiver for updating ProductBalance when ReturnItem is created
+@receiver(post_save, sender=ReturnItem)
+def update_product_balance_on_return(sender, instance, created, **kwargs):
+    if created:
+        product_balance, _ = ProductBalance.objects.get_or_create(product=instance.product)
+        product_balance.quantity += instance.quantity
         product_balance.save()

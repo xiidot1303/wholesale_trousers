@@ -98,8 +98,18 @@ class SaleItem(models.Model):
     class Meta:
         verbose_name = "Savdo mahsuloti"
         verbose_name_plural = "Savdo mahsulotlari"
-        unique_together = ('sale', 'product')
-        
+
+
+class ReturnItem(models.Model):
+    sale = models.ForeignKey('app.Sale', null=True, on_delete=models.CASCADE, verbose_name="Savdo")
+    product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT, verbose_name="Mahsulot")
+    quantity = models.IntegerField(verbose_name="Miqdor")
+    datetime = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Vaqt")
+
+    class Meta:
+        verbose_name = "Qaytarilgan mahsulot"
+        verbose_name_plural = "Qaytarilgan mahsulotlar"
+    
 
 class Sale(models.Model):
     store = models.ForeignKey(Store, null=True, on_delete=models.PROTECT, verbose_name="Do'kon")
