@@ -1,6 +1,12 @@
 from django.contrib import admin
 from app.models import *
 from django.utils.translation import gettext_lazy as _
+from django.urls import path
+from django.shortcuts import render
+from django import forms
+from django.http import JsonResponse
+from django.db.models import Sum, F, ExpressionWrapper, BigIntegerField
+from app.forms import SaleItemForm
 
 
 @admin.register(Manufacturer)
@@ -46,17 +52,53 @@ class ClientAdmin(admin.ModelAdmin):
     search_fields = ('name', 'phone')
 
 
+class PaymentInline(admin.TabularInline):
+    model = Payment
+    extra = 3
+    
+
 class SaleItemInline(admin.TabularInline):
     model = SaleItem
     extra = 100
+    form = SaleItemForm
 
 
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ('store', 'client', 'datetime')
+    list_display = ('store', 'client', 'price', 'datetime', 'remaining_debt')
     list_filter = ('store', 'datetime')
+    sortable_by = ('store', 'client', 'price', 'datetime', 'remaining_debt')
     search_fields = ('client__name', 'store__title')
-    inlines = [SaleItemInline]
+    inlines = [SaleItemInline, PaymentInline]
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(
+            total_payments=Sum('payment__amount'),
+            remaining_debt=ExpressionWrapper(
+                F('price') - F('total_payments'),
+                output_field=BigIntegerField()
+            )
+        )
+        return queryset
+
+    def remaining_debt(self, obj):
+        return obj.remaining_debt
+    remaining_debt.short_description = 'Qolgan qarz'
+    remaining_debt.admin_order_field = 'remaining_debt'
+
+
+@admin.register(Archive)
+class ArchiveAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity')
+    change_list_template = "admin/app/archive/change_list.html"
+    autocomplete_fields = ['product']
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['custom_button'] = True
+        extra_context['products'] = Product.objects.all()
+        return super().changelist_view(request, extra_context=extra_context)
 
 
 admin.site.site_header = _("Admin panel")

@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 class Manufacturer(models.Model):
     title = models.CharField(null=True, max_length=64, verbose_name="Brend nomi")
     region = models.CharField(null=True, max_length=64, verbose_name="Hudud")
@@ -74,6 +75,20 @@ class Client(models.Model):
         verbose_name = "Mijoz"
         verbose_name_plural = "Mijozlar"
 
+    def __str__(self):
+        return self.name
+
+
+class Payment(models.Model):
+    sale = models.ForeignKey('app.Sale', null=True, on_delete=models.CASCADE, verbose_name="Savdo")
+    amount = models.BigIntegerField(default=0, verbose_name="Summa")
+    comment = models.TextField(null=True, blank=True, verbose_name="Izoh")
+    datetime = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Sana")
+
+    class Meta:
+        verbose_name = "To'lov"
+        verbose_name_plural = "To'lovlar"
+
 
 class SaleItem(models.Model):
     sale = models.ForeignKey('app.Sale', null=True, on_delete=models.CASCADE, verbose_name="Savdo")
@@ -83,7 +98,8 @@ class SaleItem(models.Model):
     class Meta:
         verbose_name = "Savdo mahsuloti"
         verbose_name_plural = "Savdo mahsulotlari"
-
+        unique_together = ('sale', 'product')
+        
 
 class Sale(models.Model):
     store = models.ForeignKey(Store, null=True, on_delete=models.PROTECT, verbose_name="Do'kon")
@@ -94,3 +110,13 @@ class Sale(models.Model):
     class Meta:
         verbose_name = "Savdo"
         verbose_name_plural = "Savdolar"
+
+
+class Archive(models.Model):
+    product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT, verbose_name="Mahsulot")
+    quantity = models.IntegerField(default=0, verbose_name="Miqdori")
+
+
+    class Meta:
+        verbose_name = "Arxiv"
+        verbose_name_plural = "Arxivlar"

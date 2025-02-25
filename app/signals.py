@@ -22,10 +22,11 @@ def update_product_balance_on_income(sender, instance, created, **kwargs):
         product_balance.quantity += instance.quantity
         product_balance.save()
 
+
 # Signal receiver for updating ProductBalance when SaleItem is created
 @receiver(post_save, sender=SaleItem)
 def update_product_balance_on_sale(sender, instance, created, **kwargs):
     if created:
-        product_balance = ProductBalance.objects.get_or_create(product=instance.product)
+        product_balance, _ = ProductBalance.objects.get_or_create(product=instance.product)
         product_balance.quantity -= instance.quantity
         product_balance.save()

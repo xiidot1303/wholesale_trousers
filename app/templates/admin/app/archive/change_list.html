@@ -1,0 +1,125 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+    <button id="customButton" class="button">Arxivlash / Arxivdan chiqarish</button>
+    <div id="customModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="customForm" method="post" action="{% url 'archive-create' %}">
+                {% csrf_token %}
+                <label for="productSelect">Mahsulotni tanlang:</label>
+                <select name="product" required="" id="id_product" class="admin-autocomplete select2-hidden-accessible" data-ajax--cache="true" data-ajax--delay="250" data-ajax--type="GET" data-ajax--url="/admin/autocomplete/" data-app-label="app" data-model-name="archive" data-field-name="product" data-theme="admin-autocomplete" data-allow-clear="false" data-placeholder="" lang="None" data-select2-id="id_product" tabindex="-1" aria-hidden="true">
+                    {% for product in products %}
+                        <option value="{{ product.id }}">{{ product.title }}</option>
+                    {% endfor %}
+                </select>
+                <label for="quantityInput">Miqdori:</label>
+                <input type="number" id="id_quantity" name="quantity" min="1" class="form-control" required>
+                <select name="type" id="id_type" class="form-control">
+                    <option value="add">Arxivlash</option>
+                    <option value="remove">Arxivdan chiqarish</option>
+                </select>
+                <button type="submit" class="button">Saqlash</button>
+            </form>
+        </div>
+    </div>
+    {{ block.super }}
+{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        .button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 20px; /* Reduced padding */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1; /* Increased z-index */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%; /* Reduced width */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Added shadow */
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var modal = document.getElementById("customModal");
+            var btn = document.getElementById("customButton");
+            var span = document.getElementsByClassName("close")[0];
+
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+    </script>
+        <link href="/static/admin/css/vendor/select2/select2.css" media="screen" rel="stylesheet">
+        <link href="/static/admin/css/autocomplete.css" media="screen" rel="stylesheet">
+        <script src="/static/admin/js/vendor/jquery/jquery.js"></script>
+        <script src="/static/admin/js/vendor/select2/select2.full.js"></script>
+        <script src="/static/admin/js/jquery.init.js"></script>
+        <script src="/static/admin/js/core.js"></script>
+        <script src="/static/admin/js/autocomplete.js"></script>
+{% endblock %}

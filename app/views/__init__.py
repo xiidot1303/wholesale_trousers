@@ -9,5 +9,5 @@ from typing import Dict, Any
 from django.contrib import messages
 from app.utils.deco import *
 
-async def redirect_back(request):
+def redirect_back(request):
     return redirect(request.META.get('HTTP_REFERER'))
