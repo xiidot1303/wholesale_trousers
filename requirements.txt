@@ -30,6 +30,9 @@ exceptiongroup==1.2.1
 executing==2.1.0
 filelock==3.14.0
 frozenlist==1.5.0
+gevent==24.11.1
+greenlet==3.1.1
+gunicorn==23.0.0
 h11==0.14.0
 httpcore==1.0.5
 httpx==0.27.0
