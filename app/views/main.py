@@ -8,4 +8,4 @@ def get_file(request, path):
 
 
 def admin(request):
-    return redirect('/admin')
+    return redirect('/admin/')
