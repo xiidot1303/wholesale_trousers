@@ -47,9 +47,6 @@ class ArchiveProductView(CreateView):
             if product_balance.quantity < 0:
                 messages.error(self.request, 'Omborda yetarli miqdorda mahsulot yo\'q')
                 return redirect_back(self.request)
-            if existing_archive.quantity < 0:
-                messages.error(self.request, 'Arxivda yetarli miqdorda mahsulot yo\'q')
-                return redirect_back(self.request)
             product_balance.save()
             return super().form_valid(form)
 
