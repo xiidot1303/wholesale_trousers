@@ -14,8 +14,8 @@ def my_signal_receiver(sender, **kwargs):
 # Connect the signal to the receiver
 my_custom_signal.connect(my_signal_receiver)
 
-# Signal receiver for updating ProductBalance when Income is created
-@receiver(post_save, sender=Income)
+# Signal receiver for updating ProductBalance when IncomeItem is created
+@receiver(post_save, sender=IncomeItem)
 def update_product_balance_on_income(sender, instance, created, **kwargs):
     if created:
         product_balance, _ = ProductBalance.objects.get_or_create(product=instance.product)
