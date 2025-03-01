@@ -69,6 +69,20 @@ class ReturnItemInline(admin.TabularInline):
     extra = 100
 
 
+@admin.register(ReturnItem)
+class ReturnItemAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity', 'datetime')
+    list_filter = ('datetime',)
+    search_fields = ('product__title',)
+
+    fieldsets = (
+        ('', {
+            'fields': ['product', 'quantity'],
+            'description': 'Mahsulot miqdorini kiriting',
+        }),
+    )
+
+
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
     list_display = ('store', 'client', 'price', 'datetime', 'remaining_debt', 'edit_button')
