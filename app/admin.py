@@ -85,7 +85,7 @@ class ReturnItemAdmin(admin.ModelAdmin):
 
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ('store', 'client', 'price', 'datetime', 'remaining_debt', 'edit_button')
+    list_display = ('store', 'client', 'price', 'datetime', 'remaining_debt', 'products_and_quantities', 'edit_button')
     list_filter = ('store', 'datetime')
     sortable_by = ('store', 'client', 'price', 'datetime', 'remaining_debt')
     search_fields = ('client__name', 'store__title')
@@ -107,6 +107,13 @@ class SaleAdmin(admin.ModelAdmin):
         return obj.remaining_debt
     remaining_debt.short_description = 'Qolgan qarz'
     remaining_debt.admin_order_field = 'remaining_debt'
+
+    def products_and_quantities(self, obj):
+        sale_items = SaleItem.objects.filter(sale=obj)
+        return format_html(
+            '<br>'.join([f'{item.product.title}: {item.quantity}' for item in sale_items])
+        )
+    products_and_quantities.short_description = 'Mahsulotlar va miqdorlar'
 
     def edit_button(self, obj):
         return format_html(
