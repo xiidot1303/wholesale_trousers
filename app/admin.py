@@ -37,8 +37,18 @@ class IncomeAdmin(admin.ModelAdmin):
 
 @admin.register(ProductBalance)
 class ProductBalanceAdmin(admin.ModelAdmin):
-    list_display = ('product', 'quantity')
+    list_display = ('product', 'quantity', 'product_measurement', 'quantity_in_pieces')
     search_fields = ('product__title',)
+
+    def product_measurement(self, obj):
+        return obj.product.get_measurement_display()
+    product_measurement.short_description = 'Measurement'
+
+    def quantity_in_pieces(self, obj):
+        if (obj.product.measurement == 'pack'):
+            return obj.quantity * obj.product.quantity_in_pack
+        return obj.quantity
+    quantity_in_pieces.short_description = 'Quantity in Pieces'
 
 
 @admin.register(Store)
