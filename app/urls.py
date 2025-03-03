@@ -26,6 +26,7 @@ urlpatterns = [
     # statistics
     path('statistics/', statistics.statistics_view, name='statistics'),
     path('daily_report/', statistics.daily_report, name='daily_report'),
+    path('redirect_page/', statistics.redirect_page, name='redirect_page'),
 
     # files
     re_path(r'^files/(?P<path>.*)$', main.get_file),

@@ -56,3 +56,7 @@ def daily_report(request):
         'sales_by_store': sales_by_store,
     }
     return render(request, 'app/daily_report.html', context)
+
+
+def redirect_page(request):
+    return render(request, 'redirect_page.html')
