@@ -121,7 +121,7 @@ class SaleAdmin(admin.ModelAdmin):
     def products_and_quantities(self, obj):
         sale_items = SaleItem.objects.filter(sale=obj)
         return format_html(
-            '<br>'.join([f'{item.product.title}: {item.quantity}' for item in sale_items])
+            '<br>'.join([f'{item.product.title}: {item.quantity}{item.product.get_measurement_display()[0].lower()} {item.product.quantity_in_pack}x' for item in sale_items])
         )
     products_and_quantities.short_description = 'Mahsulotlar va miqdorlar'
 
