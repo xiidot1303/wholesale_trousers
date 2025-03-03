@@ -95,7 +95,7 @@ class ReturnItemAdmin(admin.ModelAdmin):
 
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ('store', 'client', 'price', 'datetime', 'remaining_debt', 'products_and_quantities', 'edit_button')
+    list_display = ('store', 'client', 'price', 'datetime', 'remaining_debt', 'products_and_quantities', 'is_checked', 'edit_button')
     list_filter = ('store', 'datetime')
     sortable_by = ('store', 'client', 'price', 'datetime', 'remaining_debt')
     search_fields = ('client__name', 'store__title')

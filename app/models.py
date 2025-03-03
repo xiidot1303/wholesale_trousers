@@ -116,6 +116,7 @@ class Sale(models.Model):
     client = models.ForeignKey(Client, null=True, blank=True, on_delete=models.PROTECT, verbose_name="Mijoz")
     price = models.BigIntegerField(default=0, verbose_name="Narxi")
     datetime = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Vaqt")
+    is_checked = models.BooleanField(default=False, verbose_name="Tekshirilgan")
 
     class Meta:
         verbose_name = "Savdo"
