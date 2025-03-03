@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kundalik Hisobot</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .form-inline {
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .list-group-item {
+            background-color: #e7f3e7;
+        }
+        .section-margin {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Kundalik Mahsulot Balansi Hisoboti</h1>
+        <form method="get" class="form-inline">
+            <label for="date" class="mr-2">Sana:</label>
+            <input type="date" id="date" name="date" class="form-control mr-2" value="{{ date }}">
+            <button type="submit" class="btn btn-success">Ko'rsatish</button>
+        </form>
+        <h2>{{ date }} uchun Hisobot</h2>
+        <p>Jami Mahsulot Balansi: <strong>{{ total_balance }}</strong></p>
+        <p>Jami Daromad: <strong>{{ total_income }}</strong></p>
+        <ul class="list-group">
+            {% for income in incomes_by_manufacturer %}
+                <li class="list-group-item">{{ income.product__manufacturer__title }}: {{ income.total_income }}</li>
+            {% endfor %}
+        </ul>
+        <p class="section-margin">Jami Savdo: <strong>{{ total_sales }}</strong></p>
+        <ul class="list-group">
+            {% for sale in sales_by_store %}
+                <li class="list-group-item">{{ sale.sale__store__title }}: {{ sale.total_sales }}</li>
+            {% endfor %}
+        </ul>
+        <p class="section-margin">Qolgan Balans: <strong>{{ remaining_balance }}</strong></p>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

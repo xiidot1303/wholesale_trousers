@@ -130,3 +130,13 @@ class Archive(models.Model):
     class Meta:
         verbose_name = "Arxiv"
         verbose_name_plural = "Arxivlar"
+
+
+class DailyProductBalance(models.Model):
+    product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT, verbose_name="Mahsulot")
+    quantity = models.IntegerField(default=0, verbose_name="Miqdori")
+    date = models.DateField(auto_now_add=True, db_index=True, verbose_name="Sana")
+
+    class Meta:
+        verbose_name = "Kunlik ombor"
+        verbose_name_plural = "Kunlik omborlar"

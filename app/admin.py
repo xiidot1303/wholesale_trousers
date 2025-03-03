@@ -137,5 +137,12 @@ class ArchiveAdmin(admin.ModelAdmin):
         return super().changelist_view(request, extra_context=extra_context)
 
 
+@admin.register(DailyProductBalance)
+class DailyProductBalanceAdmin(admin.ModelAdmin):
+    list_display = ('product', 'quantity', 'date')
+    search_fields = ('product__title',)
+    list_filter = ('product', 'date')
+
+
 admin.site.site_header = _("Admin panel")
 admin.site.site_title = _("Admin")

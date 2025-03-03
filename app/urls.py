@@ -24,7 +24,8 @@ urlpatterns = [
     path('archive-create', archive.ArchiveProductView.as_view(), name='archive-create'),
 
     # statistics
-    path('statistics', statistics.statistics_view, name='statistics'),
+    path('statistics/', statistics.statistics_view, name='statistics'),
+    path('daily_report/', statistics.daily_report, name='daily_report'),
 
     # files
     re_path(r'^files/(?P<path>.*)$', main.get_file),

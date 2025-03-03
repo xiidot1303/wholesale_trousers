@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Sum
 from django.utils.dateparse import parse_date
-from app.models import Sale, SaleItem, Store
+from app.models import Sale, SaleItem, Store, DailyProductBalance, IncomeItem
 
 def statistics_view(request):
     start_date = request.GET.get('start_date')
@@ -29,3 +29,30 @@ def statistics_view(request):
     }
 
     return render(request, 'app/statistics.html', context)
+
+def daily_report(request):
+    date = request.GET.get('date')
+    if date:
+        product_balances = DailyProductBalance.objects.filter(date=date)
+        total_balance = product_balances.aggregate(Sum('quantity'))['quantity__sum'] or 0
+        total_income = IncomeItem.objects.filter(income__datetime__date=date).aggregate(Sum('quantity'))['quantity__sum'] or 0
+        total_sales = SaleItem.objects.filter(sale__datetime__date=date).aggregate(Sum('quantity'))['quantity__sum'] or 0
+        remaining_balance = total_balance + total_income - total_sales
+
+        incomes_by_manufacturer = IncomeItem.objects.filter(income__datetime__date=date).values('product__manufacturer__title').annotate(total_income=Sum('quantity')).order_by('-total_income')
+        sales_by_store = SaleItem.objects.filter(sale__datetime__date=date).values('sale__store__title').annotate(total_sales=Sum('quantity')).order_by('-total_sales')
+    else:
+        total_balance = total_income = total_sales = remaining_balance = 0
+        incomes_by_manufacturer = []
+        sales_by_store = []
+
+    context = {
+        'date': date,
+        'total_balance': total_balance,
+        'total_income': total_income,
+        'total_sales': total_sales,
+        'remaining_balance': remaining_balance,
+        'incomes_by_manufacturer': incomes_by_manufacturer,
+        'sales_by_store': sales_by_store,
+    }
+    return render(request, 'app/daily_report.html', context)
