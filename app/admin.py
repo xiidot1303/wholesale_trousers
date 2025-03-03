@@ -48,7 +48,7 @@ class ProductBalanceAdmin(admin.ModelAdmin):
         if (obj.product.measurement == 'pack'):
             return obj.quantity * obj.product.quantity_in_pack
         return obj.quantity
-    quantity_in_pieces.short_description = 'Quantity in Pieces'
+    quantity_in_pieces.short_description = 'Donada'
 
 
 @admin.register(Store)
