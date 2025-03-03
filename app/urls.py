@@ -7,9 +7,8 @@ from django.contrib.auth.views import (
 )
 
 from app.views import (
-    main, archive
+    main, archive, statistics
 )
-
 
 urlpatterns = [
     path('', main.admin),
@@ -24,8 +23,9 @@ urlpatterns = [
     # archive
     path('archive-create', archive.ArchiveProductView.as_view(), name='archive-create'),
 
+    # statistics
+    path('statistics', statistics.statistics_view, name='statistics'),
+
     # files
     re_path(r'^files/(?P<path>.*)$', main.get_file),
-
-
 ]
