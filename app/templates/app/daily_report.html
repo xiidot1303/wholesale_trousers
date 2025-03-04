@@ -32,6 +32,12 @@
         .section-margin {
             margin-top: 20px;
         }
+        .hidden {
+            display: none;
+        }
+        .nested-list {
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
@@ -53,7 +59,27 @@
         <p class="section-margin">Jami Savdo: <strong>{{ total_sales }}</strong></p>
         <ul class="list-group">
             {% for sale in sales_by_store %}
-                <li class="list-group-item">{{ sale.sale__store__title }}: {{ sale.total_sales }}</li>
+                <li class="list-group-item" onclick="showSalesByManufacturer('{{ sale.sale__store__title }}')">{{ sale.sale__store__title }}: {{ sale.total_sales }}</li>
+                <ul class="list-group nested-list hidden" id="store-{{ sale.sale__store__title }}">
+                    {% for sale_manufacturer in sales_by_store_and_manufacturer %}
+                        {% if sale_manufacturer.sale__store__title == sale.sale__store__title %}
+                            <li class="list-group-item">{{ sale_manufacturer.product__manufacturer__title }}: {{ sale_manufacturer.total_sales }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </ul>
+        <p class="section-margin">Qaytarilgan Mahsulotlar: <strong>{{ total_returns }}</strong></p>
+        <ul class="list-group">
+            {% for return_item in returns_by_store %}
+                <li class="list-group-item" onclick="showReturnsByManufacturer('{{ return_item.store__title }}')">{{ return_item.store__title }}: {{ return_item.total_returns }}</li>
+                <ul class="list-group nested-list hidden" id="return-{{ return_item.store__title }}">
+                    {% for return_manufacturer in returns_by_store_and_manufacturer %}
+                        {% if return_manufacturer.store__title == return_item.store__title %}
+                            <li class="list-group-item">{{ return_manufacturer.product__manufacturer__title }}: {{ return_manufacturer.total_returns }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
             {% endfor %}
         </ul>
         <p class="section-margin">Qolgan Balans: <strong>{{ remaining_balance }}</strong></p>
@@ -61,5 +87,24 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function showSalesByManufacturer(storeTitle) {
+            var element = document.getElementById('store-' + storeTitle);
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+            } else {
+                element.classList.add('hidden');
+            }
+        }
+
+        function showReturnsByManufacturer(storeTitle) {
+            var element = document.getElementById('return-' + storeTitle);
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+            } else {
+                element.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 </html>

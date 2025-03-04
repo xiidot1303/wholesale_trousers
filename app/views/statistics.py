@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Sum
 from django.utils.dateparse import parse_date
-from app.models import Sale, SaleItem, Store, DailyProductBalance, IncomeItem
+from app.models import Sale, SaleItem, Store, DailyProductBalance, IncomeItem, ReturnItem
 
 def statistics_view(request):
     start_date = request.GET.get('start_date')
@@ -37,26 +37,36 @@ def daily_report(request):
         total_balance = product_balances.aggregate(Sum('quantity'))['quantity__sum'] or 0
         total_income = IncomeItem.objects.filter(income__datetime__date=date).aggregate(Sum('quantity'))['quantity__sum'] or 0
         total_sales = SaleItem.objects.filter(sale__datetime__date=date).aggregate(Sum('quantity'))['quantity__sum'] or 0
-        remaining_balance = total_balance + total_income - total_sales
+        total_returns = ReturnItem.objects.filter(datetime__date=date).aggregate(Sum('quantity'))['quantity__sum'] or 0
+        remaining_balance = total_balance + total_income - total_sales + total_returns
 
         incomes_by_manufacturer = IncomeItem.objects.filter(income__datetime__date=date).values('product__manufacturer__title').annotate(total_income=Sum('quantity')).order_by('-total_income')
         sales_by_store = SaleItem.objects.filter(sale__datetime__date=date).values('sale__store__title').annotate(total_sales=Sum('quantity')).order_by('-total_sales')
+        sales_by_store_and_manufacturer = SaleItem.objects.filter(sale__datetime__date=date).values('sale__store__title', 'product__manufacturer__title').annotate(total_sales=Sum('quantity')).order_by('sale__store__title', '-total_sales')
+        returns_by_store = ReturnItem.objects.filter(datetime__date=date).values('store__title').annotate(total_returns=Sum('quantity')).order_by('-total_returns')
+        returns_by_store_and_manufacturer = ReturnItem.objects.filter(datetime__date=date).values('store__title', 'product__manufacturer__title').annotate(total_returns=Sum('quantity')).order_by('store__title', '-total_returns')
     else:
-        total_balance = total_income = total_sales = remaining_balance = 0
+        total_balance = total_income = total_sales = total_returns = remaining_balance = 0
         incomes_by_manufacturer = []
         sales_by_store = []
+        sales_by_store_and_manufacturer = []
+        returns_by_store = []
+        returns_by_store_and_manufacturer = []
 
     context = {
         'date': date,
         'total_balance': total_balance,
         'total_income': total_income,
         'total_sales': total_sales,
+        'total_returns': total_returns,
         'remaining_balance': remaining_balance,
         'incomes_by_manufacturer': incomes_by_manufacturer,
         'sales_by_store': sales_by_store,
+        'sales_by_store_and_manufacturer': sales_by_store_and_manufacturer,
+        'returns_by_store': returns_by_store,
+        'returns_by_store_and_manufacturer': returns_by_store_and_manufacturer,
     }
     return render(request, 'app/daily_report.html', context)
-
 
 def redirect_page(request):
     return render(request, 'redirect_page.html')

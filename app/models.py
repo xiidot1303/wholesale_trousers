@@ -104,6 +104,7 @@ class ReturnItem(models.Model):
     sale = models.ForeignKey('app.Sale', null=True, on_delete=models.CASCADE, verbose_name="Savdo")
     product = models.ForeignKey(Product, null=True, on_delete=models.PROTECT, verbose_name="Mahsulot")
     quantity = models.IntegerField(verbose_name="Miqdor")
+    store = models.ForeignKey(Store, null=True, on_delete=models.PROTECT, verbose_name="Do'kon")
     datetime = models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Vaqt")
 
     class Meta:

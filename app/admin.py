@@ -81,13 +81,13 @@ class ReturnItemInline(admin.TabularInline):
 
 @admin.register(ReturnItem)
 class ReturnItemAdmin(admin.ModelAdmin):
-    list_display = ('product', 'quantity', 'datetime')
+    list_display = ('product', 'quantity', 'store', 'datetime')
     list_filter = ('datetime',)
     search_fields = ('product__title',)
 
     fieldsets = (
         ('', {
-            'fields': ['product', 'quantity'],
+            'fields': ['product', 'quantity', 'store'],
             'description': 'Mahsulot miqdorini kiriting',
         }),
     )
