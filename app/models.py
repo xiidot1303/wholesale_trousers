@@ -15,7 +15,7 @@ class Manufacturer(models.Model):
 
 
 class Product(models.Model):
-    title = models.CharField(null=True, max_length=255, verbose_name="Mahsulot nomi")
+    title = models.CharField(null=True, max_length=255, verbose_name="Mahsulot nomi", unique=True)
     manufacturer = models.ForeignKey(Manufacturer, null=True, on_delete=models.PROTECT, verbose_name="Ishlab chiqaruvchi")
     MEASUREMENT_CHOICES = [
         ("piece", "Dona"),
