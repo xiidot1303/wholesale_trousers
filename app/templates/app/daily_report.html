@@ -50,7 +50,7 @@
         </form>
         <h2>{{ date }} uchun Hisobot</h2>
         <p>Jami Mahsulot Balansi: <strong>{{ total_balance }}</strong></p>
-        <p>Jami Daromad: <strong>{{ total_income }}</strong></p>
+        <p>Jami Kirim: <strong>{{ total_income }}</strong></p>
         <ul class="list-group">
             {% for income in incomes_by_manufacturer %}
                 <li class="list-group-item">{{ income.product__manufacturer__title }}: {{ income.total_income }}</li>
